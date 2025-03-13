@@ -19,9 +19,16 @@ export default function SignUpBody({isSubmitClicked}) {
   const [managerIdError, setManagerIdError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   useEffect(() => 
-    { const validator = new UserValidator();
+    { 
+      if (isFirstRender) {
+        setIsFirstRender(false); // Update state to mark that first render is done
+        return; // Exit on first render
+      }
+      
+      const validator = new UserValidator();
 
       const fieldsToValidate = [
         { id: 'username', value: username },
@@ -40,17 +47,55 @@ export default function SignUpBody({isSubmitClicked}) {
         setManagerIdError(errors.managerId || false);
         setPasswordError(errors.password || false);
         setConfirmPasswordError(errors.confirmPassword || false);
+
+        const hasErrors = Object.values(errors).some(Boolean);
+        
+        if (!hasErrors){
+          signUpUser()
+        }
   }
   ,[isSubmitClicked])
+
+  const signUpUser = async () => {
+    let data = {
+      username,
+      name,
+      phoneNumber: mobile,
+      password,
+      managerId,
+    };
+  
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(result.message || "Signup failed");
+      }
+  
+      console.log("User signed up successfully:", result);
+      // Handle successful signup (e.g., redirect or show success message)
+    } catch (error) {
+      console.error("Error signing up:", error.message);
+      // Handle error (e.g., show error message to the user)
+    }
+  };
+  
+
   return (
     <div className="w-full px-4 pt-12 pb-12 bg-red-100  flex justify-center items-center ">
     <form className="bg-white shadow-2xl w-100 rounded-2xl px-8 pt-16 pb-8 mb-4 transform transition-all duration-300 hover:scale-[1.01]"> 
 
      <div className="mb-4">
         <div className="relative">
-          <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none ">
-            <FaUser className="text-gray-400" />
-          </div>
+            <FaUser className="absolute left-4 top-3 text-gray-500" />
           <input
             value={username}
             type="text"
@@ -59,7 +104,7 @@ export default function SignUpBody({isSubmitClicked}) {
             placeholder="Username"
             onChange={(e)=>{setUsername(e.target.value)}}
             required
-            className="w-full px-3 py-2 ml-20 border border-gray-300 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+            className="pl-12 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-gray-100"
           />
         </div>
         {usernameError && <div className="text-red-500 text-sm">{usernameError}</div>}
@@ -67,9 +112,9 @@ export default function SignUpBody({isSubmitClicked}) {
 
       <div className="mb-4">
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-0 ml-2 flex items-center pointer-events-none">
-            <FaUser className="text-gray-400" />
-          </div>
+          
+            <FaUser className="absolute left-4 top-3 text-gray-500" />
+         
           <input
             value={name}
             type="text"
@@ -78,7 +123,7 @@ export default function SignUpBody({isSubmitClicked}) {
             placeholder="   Full Name"
             onChange={(e)=>{setName(e.target.value)}}
             required
-            className="w-full px-3 py-2 pl-12 border border-gray-300 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+           className="pl-8 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-gray-100"
           />
         </div>
         {nameError && <div className="text-red-500 text-sm">{nameError}</div>}
@@ -86,9 +131,9 @@ export default function SignUpBody({isSubmitClicked}) {
 
       <div className="mb-4">
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-0 ml-2 flex items-center pointer-events-none">
-            <FaMobileAlt className="text-gray-400" />
-          </div>
+          
+            <FaMobileAlt className="absolute left-4 top-3 text-gray-500" />
+        
           <input
             value={mobile}
             type="tel"
@@ -97,7 +142,7 @@ export default function SignUpBody({isSubmitClicked}) {
             placeholder="    Mobile Number"
             onChange={(e)=>{setMobile(e.target.value)}}
             required
-            className="w-full px-3 py-2 pl-12 border border-gray-300 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+           className="pl-8 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-gray-100"
           />
         </div>
         {mobileError && <div className="text-red-500 text-sm">{mobileError}</div>}
@@ -105,9 +150,9 @@ export default function SignUpBody({isSubmitClicked}) {
 
       <div className='mb-4'>
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-0 ml-2 flex items-center pointer-events-none">
-            <FaUser className="text-gray-400 text-lg" />
-          </div>
+          
+            <FaUser className="absolute left-4 top-3 text-gray-500" />
+        
   
           <input
             value={managerId}
@@ -117,7 +162,7 @@ export default function SignUpBody({isSubmitClicked}) {
             placeholder="    Manager ID"
             onChange={(e) => setManagerId(e.target.value)}
             required
-            className="w-full px-3 py-2 pl-12 border border-gray-300 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+           className="pl-8 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-gray-100"
           />
         </div>
         {managerIdError && <div className="text-red-500 text-sm">{managerIdError}</div>}
@@ -127,9 +172,9 @@ export default function SignUpBody({isSubmitClicked}) {
       {/* Password Input */}
       <div className="mb-4">
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-0 ml-2 flex items-center pointer-events-none">
-            <FaLock className="text-gray-400" />
-          </div>
+          
+            <FaLock className="absolute left-4 top-3 text-gray-500" />
+        
           <input
             value={password}
             type={showPassword ? "text" : "password"}
@@ -138,7 +183,7 @@ export default function SignUpBody({isSubmitClicked}) {
             placeholder="    Password"
             onChange={(e)=>{setPassword(e.target.value)}}
             required
-            className="w-full px-3 py-2 pl-12 border border-gray-300 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+           className="pl-8 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-gray-100"
           />
           <button
             type="button"
@@ -154,9 +199,9 @@ export default function SignUpBody({isSubmitClicked}) {
       {/* Confirm Password Input */}
       <div className="mb-4">
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-0 ml-2 flex items-center pointer-events-none">
-            <FaLock className="text-gray-400" />
-          </div>
+          
+            <FaLock className="absolute left-4 top-3 text-gray-500" />
+        
           <input
             value={confirmPassword}
             type={showConfirmPassword ? "text" : "password"}
@@ -165,7 +210,7 @@ export default function SignUpBody({isSubmitClicked}) {
             placeholder="    Confirm Password"
             onChange={(e)=>{setConfirmPassword(e.target.value)}}
             required
-            className="w-full px-3 py-2 pl-12 border border-gray-300 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+           className="pl-8 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-gray-100"
           />
           <button
             type="button"

@@ -6,10 +6,10 @@ export {
 } from "./routesImports";
 
 export {
-  Dashboard, SignUpScreen, Login, Landing, MainLayout, Unhandled } from "./screensImports";
+  Dashboard, SignUpScreen, Login, Landing, MainLayoutScreen, Unhandled, ForgetPassowrdScreen } from "./screensImports";
 
 export {
-  SignUpHeader, SignUpBody, SignUpFooter
+  SignUpHeader, SignUpBody, SignUpFooter, MainLayout, Navbar, OSMMap
 } from "./componentsImports";
 
 export {

@@ -9,9 +9,13 @@ export default function SignUpFooter({setIsSubmitClicked, isSubmitClicked}) {
       >
       REGISTER
     </button>
-    <div className="flex items-center gap-2">
-      <span className="text-gray-600">Already have an account?</span>
-      <button className="text-blue-500 hover:underline">Login</button>
+    <div className="flex items-center gap-2 mb-4">
+    <p className="mt-4 text-center text-gray-700">
+      Already have an account?{" "}
+      <a href="/auth/login" className="text-purple-600 hover:underline font-semibold">
+        Log In
+      </a>
+    </p>
     </div>
   </div>  
   )

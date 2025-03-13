@@ -1,13 +1,13 @@
-import React, { Suspense} from "react";
+import React, { Suspense, useEffect, useState} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import {RecoilRoot} from 'recoil';
+import {RecoilRoot, useRecoilState} from 'recoil';
 import { MainLayoutRoutes, LandingRoutes, UnhandledRoutes,  AuthenticationRoutes,
  Loading, GuardedRoute } from './imports/import';
 import "./App.css"
 
-
 // The main application component that sets up routing for the application
 export default function App() {
+
   const auth = localStorage.setItem('attributedAuth', true);
 
   return (
