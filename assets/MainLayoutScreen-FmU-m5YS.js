@@ -1,0 +1,1 @@
+import{j as i,r as s,L as a,N as e,k as r}from"./index-BRKVqLoG.js";function o(){return console.log("HIiiiiiiiiiiiiiiiii"),i.jsx(s.Suspense,{fallback:i.jsx(a,{}),children:i.jsxs("div",{className:"h-screen w-screen overflow-hidden",children:[i.jsx(e,{}),i.jsx(r,{})]})})}export{o as default};

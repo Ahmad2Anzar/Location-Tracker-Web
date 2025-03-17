@@ -1,0 +1,1 @@
+import{r as t,j as s,L as i,g as n,h as r,i as o}from"./index-BRKVqLoG.js";function x(){const[e,a]=t.useState(!1);return s.jsxs(t.Suspense,{fallback:s.jsx(i,{}),children:[s.jsx(n,{}),s.jsx(r,{isSubmitClicked:e}),s.jsx(o,{setIsSubmitClicked:a,isSubmitClicked:e})]})}export{x as default};

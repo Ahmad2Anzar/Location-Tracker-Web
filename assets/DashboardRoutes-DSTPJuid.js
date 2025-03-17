@@ -1,0 +1,1 @@
+import{j as s,r as e,L as t,a as o,b as a,f as r,U as n}from"./index-BRKVqLoG.js";function j(){return s.jsx(e.Suspense,{fallback:s.jsx(t,{}),children:s.jsxs(o,{children:[s.jsx(a,{path:"/",element:s.jsx(r,{})}),s.jsx(a,{path:"*",element:s.jsx(n,{})})]})})}export{j as default};
