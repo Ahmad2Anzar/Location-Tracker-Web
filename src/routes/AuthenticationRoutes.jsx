@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { UnhandledRoutes, Login, SignUpScreen, Loading } from '../imports/import';
+import { UnhandledRoutes, Login, SignUpScreen, Loading, ForgetPassowrdScreen } from '../imports/import';
 
 export default function AuthenticationRoutes() {
   return (
@@ -11,6 +11,7 @@ export default function AuthenticationRoutes() {
         {/* Route for the different Auth page path, wrapped with GuardedRoute to protect the route */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUpScreen/>} />
+        <Route path="/forget-password" element={<ForgetPassowrdScreen/>} />
         <Route path="*" element={<UnhandledRoutes />} />
       </Routes>
     </Suspense>

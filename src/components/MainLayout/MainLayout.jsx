@@ -1,5 +1,5 @@
 import { FaArrowUp, FaCrosshairs } from "react-icons/fa";
-import { OSMMap } from "../../imports/componentsImports";
+import { OSMMap, StartShiftComponent } from "../../imports/componentsImports";
 
 
 export default function MainLayout() {
@@ -7,7 +7,7 @@ export default function MainLayout() {
     <div className="h-screen w-screen bg-gray-900 flex flex-col justify-center items-center relative">
       {/* Top Section */}
       <div className="w-full h-1/2 bg-gray-800 flex justify-center items-center rounded-t-xl">
-        <OSMMap/>
+      <StartShiftComponent/>
       </div>
 
       {/* Bottom Section */}
@@ -33,7 +33,10 @@ export default function MainLayout() {
             <FaArrowUp size={18} />
           </button>
         </div>
+        
       </div>
+      
+     
     </div>
   );
 

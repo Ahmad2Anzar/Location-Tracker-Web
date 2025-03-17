@@ -1,22 +1,51 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { MainLayout, DashboardRoutes, UnhandledRoutes, Loading } from '../imports/import';
+import { MainLayoutScreen, DashboardRoutes, UnhandledRoutes, Loading } from '../imports/import';
+import { useRecoilState } from 'recoil';
+import locationStates from '../recoil/atom/location_atom';
 
 function MainLayoutRoutes() {
+  const [latitude, setLatitude] = useRecoilState(locationStates.latitude);
+  const [longitude, setLongitude] = useRecoilState(locationStates.longitude);  
+  const [error, setError] = useState(false); 
+ 
+ useEffect(() => {    
+    const getLocation = () => {
+      if ("geolocation" in navigator) {
+        console.log(latitude,longitude,"ROUTES")
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+            setError(null);
+          },
+          (err) => {
+            console.log(err.message);
+          }
+        ); 
+      } else {
+        setError("Geolocation is not supported by your browser.");
+      }
+    };
+
+    getLocation();    
+    const interval = setInterval(() => {
+      getLocation();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   return (
-    // Suspense component is used to show a fallback UI (Loading...) while the lazy-loaded component is being fetched
-    <Suspense fallback={<Loading/>}>
-      {/* Define application routes */}
-      <div className='screen-wrapper'>
-        <Routes>
-          <Route index element={<MainLayout />} />
+    <Suspense fallback={<Loading />}>     
+        <Routes>          
+          <Route index element={<MainLayoutScreen />} />
           <Route path="dashboard/*" element={<DashboardRoutes />} />
           <Route path="*" element={<UnhandledRoutes />} />
-        </Routes>
-      </div>
+        </Routes>     
     </Suspense>
-  )
+  );
 }
 
 export default MainLayoutRoutes;

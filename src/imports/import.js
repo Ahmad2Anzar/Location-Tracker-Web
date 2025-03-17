@@ -9,7 +9,7 @@ export {
   Dashboard, SignUpScreen, Login, Landing, MainLayoutScreen, Unhandled, ForgetPassowrdScreen } from "./screensImports";
 
 export {
-  SignUpHeader, SignUpBody, SignUpFooter, MainLayout, Navbar, OSMMap
+  SignUpHeader, SignUpBody, SignUpFooter, MainLayout, Navbar, OSMMap, StartShiftComponent
 } from "./componentsImports";
 
 export {

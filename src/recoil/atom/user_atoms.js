@@ -31,13 +31,20 @@ const confirmPassword = atom({
   default: ''
 });
 
+const token = atom({
+  key: 'token',
+  default: ''
+});
+
+
 const signupStates = {
  username,
  name,
  managerId,
  mobile,
  password,
- confirmPassword
+ confirmPassword,
+ token
 };
 
 export default signupStates;

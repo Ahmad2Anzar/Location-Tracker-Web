@@ -2,7 +2,6 @@ class UserValidator {
   constructor() {
     this.errors = {};
   }
-
   /**
    * Validates an array of field objects and stores errors.
    * @param {Array} fields - Array of field objects with 'id' and 'value' properties.
@@ -10,40 +9,30 @@ class UserValidator {
    */
   validate(fields) {
     this.errors = {}; // Reset errors before validation
+    let passwordValue = '';
     fields.forEach(({ id, value }) => {
       // Determine which validation method to call based on the field ID
       switch (id) {
-        case 'email':
-          this.validateEmail(value, id);
+        case 'mobile':
+          this.validateMobile(value, id);
           break;
-        case 'phone':
-          this.validatePhone(value, id);
+        case 'username':
+          this.validateUsername(value, id);
           break;
-        case 'firstName':
-          this.validateFirstName(value, id);
+        case 'name':
+          this.validateName(value, id);
           break;
-        case 'lastName':
-          this.validateLastName(value, id);
-          break;
-        case 'companyName':
-          this.validateCompanyName(value, id);
-          break;
-        case 'countryName':
-          this.validateCountryName(value, id);
-          break;
-        case 'position':
-          this.validatePosition(value, id);
-          break;
-        case 'industry':
-          this.validateIndustry(value, id);
-          break;
-        case 'companySize':
-          this.validateCompanySize(value, id);
+        case 'managerId':
+          this.validateManagerId(value,id);
           break;
         case 'password':
           this.validatePassword(value, id);
+          passwordValue=value;
           break;
-        // Add more cases for other fields as needed
+        case "confirmPassword":
+          this.validateConfirmPassword(value, passwordValue, id);
+          break;
+        
         default:
           break;
       }
@@ -66,27 +55,42 @@ class UserValidator {
       this.errors[id] = 'Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character.';
     }
   }
-
+  
   /**
-   * Validates an email address.
-   * @param {string} email - The email address to validate.
+   * Validates a password against a regular expression.
+   * @param {string} confirmPassword - The password to validate.
    * @param {string} id - The field ID for error reporting.
    */
-  validateEmail(email, id) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email || !emailRegex.test(email)) {
-      this.errors[id] = 'Please enter a valid email address.';
+  validateConfirmPassword(confirmPassword, password, id) {
+    if (!confirmPassword) {
+      this.errors[id] = "Confirm Password is required.";
+    } else if (confirmPassword !== password) {
+      this.errors[id] = "Passwords do not match.";
     }
   }
 
+/**
+ * Validates a Manager ID.
+ * @param {string | number} managerId - The Manager ID to validate.
+ * @param {string} id - The field ID for error reporting.
+ */
+validateManagerId(managerId, id) {
+  if (!managerId || isNaN(managerId)) {
+    this.errors[id] = 'Manager ID is required and must be a number.';
+  }
+}
+
   /**
    * Validates a phone number.
-   * @param {string} phone - The phone number to validate.
+   * @param {string} mobile - The phone number to validate.
    * @param {string} id - The field ID for error reporting.
    */
-  validatePhone(phone, id) {
-    const phoneRegex = /^\+?[0-9]{10,15}$/;
-    if (phone && !phoneRegex.test(phone)) {
+  validateMobile(mobile, id) {
+    const mobileRegex = /^\+?[0-9]{10,15}$/;
+    
+    if (!mobile) {
+      this.errors[id] = 'Mobile number is required.';
+    } else if (!mobileRegex.test(mobile)) {
       this.errors[id] = 'Please enter a valid phone number.';
     }
   }
@@ -96,9 +100,9 @@ class UserValidator {
    * @param {string} firstName - The first name to validate.
    * @param {string} id - The field ID for error reporting.
    */
-  validateFirstName(firstName, id) {
+  validateUsername(firstName, id) {
     if (!firstName || firstName.length < 2) {
-      this.errors[id] = 'First name must be at least 2 characters long.';
+      this.errors[id] = 'Username must be at least 2 characters long.';
     }
   }
 
@@ -107,64 +111,9 @@ class UserValidator {
    * @param {string} lastName - The last name to validate.
    * @param {string} id - The field ID for error reporting.
    */
-  validateLastName(lastName, id) {
+  validateName(lastName, id) {
     if (!lastName || lastName.length < 2) {
-      this.errors[id] = 'Last name must be at least 2 characters long.';
-    }
-  }
-
-  /**
-   * Validates a company name.
-   * @param {string} companyName - The company name to validate.
-   * @param {string} id - The field ID for error reporting.
-   */
-  validateCompanyName(companyName, id) {
-    if (!companyName || companyName.length < 2) {
-      this.errors[id] = 'Company name must be at least 2 characters long.';
-    }
-  }
-
-  /**
-   * Validates a country name.
-   * @param {string} countryName - The country name to validate.
-   * @param {string} id - The field ID for error reporting.
-   */
-  validateCountryName(countryName, id) {
-    if (!countryName || countryName.length < 2) {
-      this.errors[id] = 'Country name must be at least 2 characters long.';
-    }
-  }
-
-  /**
-   * Validates a position.
-   * @param {string} position - The position to validate.
-   * @param {string} id - The field ID for error reporting.
-   */
-  validatePosition(position, id) {
-    if (!position || position.length < 2) {
-      this.errors[id] = 'Position must be at least 2 characters long.';
-    }
-  }
-
-  /**
-   * Validates an industry.
-   * @param {string} industry - The industry to validate.
-   * @param {string} id - The field ID for error reporting.
-   */
-  validateIndustry(industry, id) {
-    if (!industry || industry.length < 2) {
-      this.errors[id] = 'Industry must be at least 2 characters long.';
-    }
-  }
-
-  /**
-   * Validates a company size.
-   * @param {string} companySize - The company size to validate.
-   * @param {string} id - The field ID for error reporting.
-   */
-  validateCompanySize(companySize, id) {
-    if (!companySize ||  companySize.length < 2) {
-      this.errors[id] = 'Company size must be a positive number.';
+      this.errors[id] = 'Name must be at least 2 characters long.';
     }
   }
 }

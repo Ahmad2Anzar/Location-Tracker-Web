@@ -11,7 +11,9 @@ export default function OSMMap() {
  
  const [position, setPosition] = useState(null); 
  useEffect(()=>{
-    setPosition([latitude,longitude])    
+    
+    setPosition([latitude,longitude])  
+    console.log(position )  
  },[latitude,longitude])
   return (
     <>   
