@@ -6,7 +6,7 @@ export default function MainLayoutScreen() {
   console.log("HIiiiiiiiiiiiiiiiii")
   return (
    <Suspense fallback={<Loading />}>
-     <div className="h-screen w-screen overflow-hidden">
+     <div className="h-screen w-screen ">
        <Navbar/>
        
        <MainLayout/>

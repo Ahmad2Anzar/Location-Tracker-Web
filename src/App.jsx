@@ -17,13 +17,13 @@ export default function App() {
         <Router>
           <Routes>
             {/* Main layout route: Handles all routes under "/*" (catch-all for the main layout) */}
-            <Route path="/*" element={<GuardedRoute element={<MainLayoutRoutes/>}/>} />
+            <Route path="/Location-Tracker-Web/*" element={<GuardedRoute element={<MainLayoutRoutes/>}/>} />
 
             {/* Landing route: Handles all routes under "/landing/*" */}
             <Route path="/landing/*" element={<LandingRoutes />} />
 
             {/* Authentication route: Handles all routes under "/auth/*" */}
-            <Route path="/auth/*" element={<AuthenticationRoutes />} />
+            <Route path="/Location-Tracker-Web/auth/*" element={<AuthenticationRoutes />} />
 
             {/* Catch-all route: Handles any route not matched by the above routes */}
             <Route path="*" element={<UnhandledRoutes />} />

@@ -42,6 +42,7 @@ function MainLayoutRoutes() {
         <Routes>          
           <Route index element={<MainLayoutScreen />} />
           <Route path="dashboard/*" element={<DashboardRoutes />} />
+          <Route path="planned_routes/*" element={<DashboardRoutes />} />
           <Route path="*" element={<UnhandledRoutes />} />
         </Routes>     
     </Suspense>

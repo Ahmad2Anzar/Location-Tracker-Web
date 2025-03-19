@@ -1,13 +1,15 @@
 import { FaArrowUp, FaCrosshairs } from "react-icons/fa";
-import { OSMMap, StartShiftComponent } from "../../imports/componentsImports";
+import { AddRoute, FeedbackForm, OSMMap, PlannedRoutes, ReachedMilestoneComponent, StartShiftComponent } from "../../imports/componentsImports";
 
 
 export default function MainLayout() {
   return (
+   
+
     <div className="h-screen w-screen bg-gray-900 flex flex-col justify-center items-center relative">
       {/* Top Section */}
       <div className="w-full h-1/2 bg-gray-800 flex justify-center items-center rounded-t-xl">
-      <StartShiftComponent/>
+      <OSMMap/>
       </div>
 
       {/* Bottom Section */}
@@ -33,10 +35,7 @@ export default function MainLayout() {
             <FaArrowUp size={18} />
           </button>
         </div>
-        
-      </div>
-      
-     
+      </div>     
     </div>
   );
 
