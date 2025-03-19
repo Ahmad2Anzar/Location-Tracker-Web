@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { MainLayoutScreen, DashboardRoutes, UnhandledRoutes, Loading } from '../imports/import';
+import { MainLayoutScreen, DashboardRoutes, UnhandledRoutes, Loading, Planned, StartShiftComponent } from '../imports/import';
 import { useRecoilState } from 'recoil';
 import locationStates from '../recoil/atom/location_atom';
 
@@ -42,7 +42,8 @@ function MainLayoutRoutes() {
         <Routes>          
           <Route index element={<MainLayoutScreen />} />
           <Route path="dashboard/*" element={<DashboardRoutes />} />
-          <Route path="planned_routes/*" element={<DashboardRoutes />} />
+          <Route path="planned_routes/*" element={<Planned/>} />
+          <Route path="shift" element={<StartShiftComponent/>} />
           <Route path="*" element={<UnhandledRoutes />} />
         </Routes>     
     </Suspense>

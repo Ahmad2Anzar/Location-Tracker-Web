@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate, } from "react-router-dom";
 
 export default function AddRouteForm() {
   const [formData, setFormData] = useState({
@@ -6,6 +7,8 @@ export default function AddRouteForm() {
     dealerName: "",
     dealerPhone: "",
   });
+  
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
 
@@ -36,6 +39,7 @@ export default function AddRouteForm() {
   const handleCancel = () => {
     setFormData({ routeLocation: "", dealerName: "", dealerPhone: "" });
     setErrors({});
+    navigate('/Location-Tracker-Web/planned_routes')
   };
 
   return (

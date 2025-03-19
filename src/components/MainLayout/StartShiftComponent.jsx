@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { CameraCapture } from "../../imports/componentsImports";
 import { FaUser, FaMotorcycle, FaCar, FaTrain, FaBus, FaBicycle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function StartShiftComponent() {
   const [photo, setPhoto] = useState(null);
   const [transportMode, setTransportMode] = useState(null);
   const [transportPhoto, setTransportPhoto] = useState(null);
+  const navigate = useNavigate()
 
   const handleStartTracking = async () => {
     if (!photo) {
@@ -49,9 +51,11 @@ export default function StartShiftComponent() {
 
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 p-4">
+      <div className="bg-green-300 text-white p-6 rounded-lg shadow-lg w-full max-w-md text-center mb-2">
+      <h1 className="text-2xl font-bold">Start Your Shift</h1>
+    </div>
       {/* Shift Start Section */}
       <div className="bg-white text-green p-6 rounded-lg shadow-lg w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold">Start Your Shift</h1>
         <div className="mt-4">
           <h4 className="text-lg flex items-center justify-center gap-2">
             <FaUser /> Your Photo
@@ -117,9 +121,14 @@ export default function StartShiftComponent() {
       null
       }
       <button 
-      onClick={()=>{handleStartTracking}}
-      className="bg-green-500 text-white px-6 py-2 rounded-full  mt-6 shadow-md hover:bg-green-600 transition-all">
+        onClick={()=>{handleStartTracking}}
+        className="bg-green-500 text-white px-6 py-2 rounded-full  mt-6 mb-4 shadow-md hover:bg-green-600 transition-all">
         Start Tracking
+      </button>
+      <button 
+        onClick={()=>{navigate('/Location-Tracker-Web')}}
+        className="bg-red-400 text-white px-6 py-2 rounded-full  mt-6 shadow-md hover:bg-green-600 transition-all">
+        Cancel
       </button>
     </div>
   );

@@ -1,8 +1,9 @@
 import GuardedRoute from "../hooks/GuardedRoute";
 import Loading from "../miscellaneous/Loading";
+import  { Menu } from "../miscellaneous/GeneralsArrays";
 
 export {
-  MainLayoutRoutes, LandingRoutes, UnhandledRoutes, AuthenticationRoutes, DashboardRoutes, 
+  MainLayoutRoutes, LandingRoutes, UnhandledRoutes, AuthenticationRoutes, DashboardRoutes, Planned
 } from "./routesImports";
 
 export {
@@ -10,7 +11,7 @@ export {
 
 export {
   SignUpHeader, SignUpBody, SignUpFooter, MainLayout, Navbar, OSMMap, StartShiftComponent, FeedbackForm, PlannedRoutes,
-  AddRoute, CameraCapture, ReachedMilestoneComponent
+  AddRoute, CameraCapture, ReachedMilestoneComponent, MenuOption
 } from "./componentsImports";
 
 export {
@@ -19,4 +20,4 @@ export {
 
 
 
-export { GuardedRoute, Loading };
+export { GuardedRoute, Loading, Menu };

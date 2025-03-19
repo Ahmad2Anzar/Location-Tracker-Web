@@ -9,12 +9,12 @@ export default function OSMMap() {
  const [latitude, setLatitude] = useRecoilState(locationStates.latitude)
  const [longitude, setLongitude] = useRecoilState(locationStates.longitude)
  
- const [position, setPosition] = useState(null); 
- useEffect(()=>{
-    
-    setPosition([latitude,longitude])  
-    console.log(position )  
- },[latitude,longitude])
+ const [position, setPosition] = useState(null);
+
+ useEffect(()=>{    
+   setPosition([latitude,longitude])      
+ },[latitude, longitude]);
+
   return (
     <>   
     {
@@ -30,7 +30,8 @@ export default function OSMMap() {
         <Marker position={position}>
           <Popup>You are here!</Popup>
         </Marker>
-      </MapContainer> 
+      </MapContainer>
+      // <></>
       : 
       <>
       </>

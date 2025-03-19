@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { CameraCapture } from "../../imports/componentsImports";
 import { FaUser, FaBuilding, FaMotorcycle, FaCar, FaTrain, FaBus, FaBicycle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function ReachedMilestone({ address }) {
   const [userPhoto, setUserPhoto] = useState(null);
   const [entityPhoto, setEntityPhoto] = useState(null);
   const [transportMode, setTransportMode] = useState(null);
   const [transportPhoto, setTransportPhoto] = useState(null);
-
+  const navigate = useNavigate()
   // Check if submit should be enabled
   const canSubmit = userPhoto && entityPhoto && transportMode 
 
@@ -103,7 +104,7 @@ export default function ReachedMilestone({ address }) {
       <div className="flex gap-4 mt-6">
         <button
           className="bg-red-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-red-600 transition-all"
-          
+          onClick={() => navigate('/Location-Tracker-Web/planned_routes') }
         >
           Cancel
         </button>

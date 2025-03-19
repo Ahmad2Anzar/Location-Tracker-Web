@@ -5,4 +5,4 @@ export const LandingRoutes = lazy(() => import('../routes/LandingRoutes'));
 export const UnhandledRoutes = lazy(() => import('../routes/UnhandledRoutes'));
 export const AuthenticationRoutes = lazy(() => import('../routes/AuthenticationRoutes'));
 export const DashboardRoutes = lazy(() => import('../routes/DashboardRoutes.jsx'));
-
+export const Planned = lazy(() => import('../routes/Planned.jsx'))
