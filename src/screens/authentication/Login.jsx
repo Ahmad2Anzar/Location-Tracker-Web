@@ -1,14 +1,15 @@
 import React, {useState} from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [errors, setErrors] = useState({ username: "", password: "" });
-
+  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
     let validationErrors = {};
@@ -24,7 +25,7 @@ export default function Login() {
           password,
         };
     
-        const response = await fetch("/api/auth/login", {
+        const response = await fetch(`${BASE_URL}/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -37,8 +38,11 @@ export default function Login() {
         if (!response.ok) {
           throw new Error(result.message || "Login failed");
         }
-    
-        console.log("User logged in successfully:", result);
+        console.log("User logged in successfully");
+        if (result.token) {
+          localStorage.setItem("authToken", result.token);
+          navigate('/Location-Tracker-Web/')
+        }
         // Handle successful login (e.g., store token, redirect user)
       } catch (error) {
         console.error("Error logging in:", error.message);
@@ -57,7 +61,7 @@ export default function Login() {
         <form id="signup-form" onSubmit={handleSubmit}>
           {/* Username Input */}
           <div className="relative mb-6">
-            <FaUser className="absolute left-4 top-3 text-gray-500" size={20} />
+            <FaUser className="absolute left-4 top-5 text-gray-500" size={20} />
             <input
               type="text"
               id="username"
@@ -73,7 +77,7 @@ export default function Login() {
 
           {/* Password Input with Eye Toggle */}
           <div className="relative mb-6">
-            <FaLock className="absolute left-4 top-3 text-gray-500" size={20} />
+            <FaLock className="absolute left-4 top-5 text-gray-500" size={20} />
             <input
               type={passwordVisible ? "text" : "password"}
               id="password"
@@ -84,7 +88,7 @@ export default function Login() {
             />
             <button
               type="button"
-              className="absolute right-4 top-3 text-gray-500"
+              className="absolute right-4 top-5 text-gray-500"
               onClick={() => setPasswordVisible(!passwordVisible)}
             >
               {passwordVisible ? <FaEye/> : <FaEyeSlash />}
@@ -103,15 +107,15 @@ export default function Login() {
         </form>
       </div>
       <p className="mt-4 text-center text-gray-700">
-      <a href="/auth/forget-password" className="text-purple-600 hover:underline font-semibold">
-        Forget Password
-      </a>
-    </p>
-      <p className="mt-4 text-center text-gray-700">
+        <Link to="/Location-Tracker-Web/auth/forget-password" className="text-purple-600 hover:underline font-semibold">
+          Forget Password
+        </Link>
+      </p>
+    <p className="mt-4 text-center text-gray-700">
       Don't have an account?{" "}
-      <a href="/auth/signup" className="text-purple-600 hover:underline font-semibold">
+      <Link to="/Location-Tracker-Web/auth/signup" className="text-purple-600 hover:underline font-semibold">
         Register
-      </a>
+      </Link>
     </p>
     </div>
   );

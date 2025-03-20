@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { MainLayoutScreen, DashboardRoutes, UnhandledRoutes, Loading, Planned, StartShiftComponent } from '../imports/import';
+import { MainLayoutScreen, DashboardRoutes, UnhandledRoutes, Loading, Planned, StartShiftComponent, PermissionRoute,  } from '../imports/import';
 import { useRecoilState } from 'recoil';
 import locationStates from '../recoil/atom/location_atom';
 
@@ -36,13 +36,12 @@ function MainLayoutRoutes() {
     return () => clearInterval(interval);
   }, []);
 
-
   return (
     <Suspense fallback={<Loading />}>     
         <Routes>          
           <Route index element={<MainLayoutScreen />} />
           <Route path="dashboard/*" element={<DashboardRoutes />} />
-          <Route path="planned_routes/*" element={<Planned/>} />
+          <Route path="planned_routes/*" element={<PermissionRoute children={<Planned/>}/>} />
           <Route path="shift" element={<StartShiftComponent/>} />
           <Route path="*" element={<UnhandledRoutes />} />
         </Routes>     

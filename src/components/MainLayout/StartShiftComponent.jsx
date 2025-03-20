@@ -51,11 +51,11 @@ export default function StartShiftComponent() {
 
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="bg-green-300 text-white p-6 rounded-lg shadow-lg w-full max-w-md text-center mb-2">
+      <div className="bg-green-400 text-white p-6 rounded-2xl shadow-lg w-full max-w-md text-center mb-2">
       <h1 className="text-2xl font-bold">Start Your Shift</h1>
     </div>
       {/* Shift Start Section */}
-      <div className="bg-white text-green p-6 rounded-lg shadow-lg w-full max-w-md text-center">
+      <div className="bg-white text-green p-6 rounded-3xl shadow-lg w-full max-w-md text-center">
         <div className="mt-4">
           <h4 className="text-lg flex items-center justify-center gap-2">
             <FaUser /> Your Photo
@@ -67,7 +67,9 @@ export default function StartShiftComponent() {
           )}
 
           {photo && (
-            <button className="bg-red-500 text-white px-4 py-2 rounded-lg mt-2 hover:bg-red-600" onClick={() => setPhoto(null)}>
+            <button 
+            style={{ borderRadius: "25px" }}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg mt-2 hover:bg-red-600" onClick={() => setPhoto(null)}>
               Retake
             </button>
           )}
@@ -75,7 +77,7 @@ export default function StartShiftComponent() {
       </div>
 
       {/* Transport Selection Section */}
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center mt-6 mb-4">
+      <div className="bg-white p-6 rounded-3xl shadow-lg w-full max-w-md text-center mt-6 mb-4">
         <h4 className="text-xl font-semibold">Select Transport Mode</h4>
         <div className="mt-4 flex flex-wrap justify-center gap-3">
           {[
@@ -87,7 +89,8 @@ export default function StartShiftComponent() {
           ].map(({ mode, icon }) => (
             <button
               key={mode}
-              className={`px-4 py-2 rounded-lg border flex items-center gap-2 transition-all ${
+              style={{ borderRadius: "50px" }}
+              className={`px-4 py-2 rounded-3xl border flex items-center gap-2 transition-all ${
                 transportMode === mode
                   ? "bg-blue-500 text-white shadow-md"
                   : "bg-gray-200 hover:bg-gray-300"
@@ -122,11 +125,13 @@ export default function StartShiftComponent() {
       }
       <button 
         onClick={()=>{handleStartTracking}}
+        style={{ borderRadius: "25px" }}
         className="bg-green-500 text-white px-6 py-2 rounded-full  mt-6 mb-4 shadow-md hover:bg-green-600 transition-all">
         Start Tracking
       </button>
       <button 
         onClick={()=>{navigate('/Location-Tracker-Web')}}
+        style={{ borderRadius: "25px" }}
         className="bg-red-400 text-white px-6 py-2 rounded-full  mt-6 shadow-md hover:bg-green-600 transition-all">
         Cancel
       </button>

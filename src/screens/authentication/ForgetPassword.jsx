@@ -1,6 +1,8 @@
 import {useState} from 'react'
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -11,28 +13,29 @@ export default function Login() {
   const [errors, setErrors] = useState({ username: "", password: "" , confirmPassword:""});
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
     let validationErrors = {};
     if (!username) validationErrors.username = "username can't be blank";
     if (!password) validationErrors.password = "Password can't be blank";
     if (!confirmPassword) validationErrors.confirmPassword = "Confirm Password can't be blank";
     setErrors(validationErrors);
-
     if (Object.keys(validationErrors).length === 0) {
+      console.log(username,password)
       try {
         let data = {
           username,
           password,
         };
-    
-        const response = await fetch("/api/auth/login", {
+
+        const response = await fetch(`${BASE_URL}/reset_password`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
         });
-    
+
         const result = await response.json();
     
         if (!response.ok) {
@@ -101,7 +104,7 @@ export default function Login() {
               id="confirmPassword"
               placeholder="Enter Confirm Password"
               className="pl-12 pr-12 py-3 w-full border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-gray-100"
-              value={password}
+              value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <button
@@ -125,10 +128,10 @@ export default function Login() {
         </form>
       </div>
       <p className="mt-4 text-center text-gray-700">
-        <a href="/auth/login" className="text-purple-600 hover:underline font-semibold">
-            Back to Login
-        </a>
-      </p>  
+        <Link to="/Location-Tracker-Web/auth/login" className="text-purple-600 hover:underline font-semibold">
+          Back to Login
+        </Link>
+      </p>
     </div>
   );
 }

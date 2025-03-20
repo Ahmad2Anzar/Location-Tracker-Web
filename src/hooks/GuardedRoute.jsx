@@ -6,12 +6,12 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 const GuardedRoute = ({ element, ...rest }) => {
     // Retrieve authentication status from local storage
-    const auth = localStorage.getItem('attributedAuth');
+    const auth = localStorage.getItem('authToken');
 
     // Get the current location using the useLocation hook
     const location = useLocation();
 
-    // If the user is not authenticated (attributedAuth is not found in local storage),
+    // If the user is not authenticated 
     // redirect them to the landing ("/landing") and pass the current location state.
     // The state allows redirecting back to this page after authentication.
     if (!auth) {

@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom"
 
 export default function SignUpFooter({setIsSubmitClicked, isSubmitClicked}) {
   return (
@@ -12,9 +12,9 @@ export default function SignUpFooter({setIsSubmitClicked, isSubmitClicked}) {
     <div className="flex items-center gap-2 mb-4">
     <p className="mt-4 text-center text-gray-700">
       Already have an account?{" "}
-      <a href="/auth/login" className="text-purple-600 hover:underline font-semibold">
+      <Link to="/Location-Tracker-Web/auth/login" className="text-purple-600 hover:underline font-semibold">
         Log In
-      </a>
+      </Link>
     </p>
     </div>
   </div>  

@@ -3,6 +3,7 @@ import { FaUser, FaMobileAlt, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useRecoilState } from 'recoil'
 import signupStates from '../../recoil/atom/user_atoms'
 import UserValidator from '../../validators/UserValidator'
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function SignUpBody({isSubmitClicked}) {
   const [username, setUsername] = useRecoilState (signupStates.username)
@@ -66,7 +67,7 @@ export default function SignUpBody({isSubmitClicked}) {
     };
   
     try {
-      const response = await fetch("/api/auth/signup", {
+      const response = await fetch(`${BASE_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BiBorderRadius } from "react-icons/bi";
 import { FaArrowLeft, FaSync, FaMapMarkerAlt, FaFlag, FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -118,7 +119,8 @@ export default function PlannedRoutes() {
         ))}
         <button 
         onClick={()=> navigate('add-routes')}
-        className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-lg font-semibold px-6 py-3 rounded-3xl shadow-md hover:bg-blue-700 transition-all">
+        style={{borderRadius:"50px"}}
+       className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-lg font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all" >
         Add New Route
       </button>
     </div>
