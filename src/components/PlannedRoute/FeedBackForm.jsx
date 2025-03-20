@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { FaTimes, FaStar } from "react-icons/fa";
 import FeedbackValidator from "../../validators/FeedbackFormValidator";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import {getBattery, getLocation} from '../../imports/import'
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function FeedBackForm() {
   const [formData, setFormData] = useState({
     dealerName: "",
+    competitors: "" ,
     existingDealer: "",
     orderSize: "",
     expectedOrderTime: "",
@@ -19,6 +22,28 @@ export default function FeedBackForm() {
   const [orders, setOrders] = useState([]);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const token = localStorage.getItem("authToken");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const routeId = queryParams.get("id");
+  const locationId = queryParams.get("locationId");
+  const fetchBattery = async () =>{ 
+    const batteryLevel = await getBattery()
+    if(batteryLevel){
+      return batteryLevel.level*100
+    }
+  }
+
+  const fetchLocation = async () => {
+    try {
+      const location = await getLocation();
+      if(location){
+        return location
+      };
+    } catch (error) {
+      console.error("Could not get location:", error);
+    }
+  };
   const addOrder = () => {
     setOrders([...orders, { brand: "", quantity: "" }]);
   };
@@ -37,17 +62,66 @@ export default function FeedBackForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validator = new FeedbackValidator();
     const validationErrors = validator.validate({ ...formData, orders });
-
+  
     setErrors(validationErrors);
-
+  
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Form Submitted Successfully!", { ...formData, orders });
+      try {
+        const batteryLevel = await fetchBattery();
+        const currentGeoPoint = await fetchLocation();
+  
+        const payload = {
+          id: locationId ,
+          dealerName: formData.dealerName,
+          existingDealer: formData.existingDealer,
+          orderSize: formData.orderSize,
+          expectedOrderTime: formData.expectedOrderTime,
+          perMonthSale: formData.perMonthSales,
+          capacityToBuy: formData.capacityToBuy,
+          paymentTerms: formData.paymentTerms,
+          comment: formData.comments,
+          rating: formData.rating,
+          competitors: formData.competitors, 
+          dealerInterest: "", 
+          otherTerms: "", 
+          orders: orders.map((order) => ({
+            brand: order.brand,
+            quantity: order.quantity,
+          })),
+          route_id: routeId, 
+          currentGeoPoint,
+          batteryLevel,
+          timestamp: new Date().toISOString(),
+        };
+  
+        const response = await fetch(`${BASE_URL}/complete_milestone`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+  
+        const result = await response.json();
+  
+        if (response.ok) {
+          alert("Feedback submitted successfully!");
+        } else {
+          alert(result.message || "Failed to submit feedback.");
+        }
+      } catch (error) {
+        console.error("Error submitting feedback:", error);
+        alert("An error occurred. Please try again.");
+      }
     }
   };
+  
+  
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-xl border">
@@ -62,6 +136,15 @@ export default function FeedBackForm() {
         className="w-full p-2 border rounded mb-2 text-sm"
       />
       {errors.dealerName && <p className="text-red-500 text-sm">{errors.dealerName}</p>}
+      
+      <input
+        type="text"
+        name="competitors"
+        placeholder="Competitors Name"
+        value={formData.competitors}
+        onChange={handleChange}
+        className="w-full p-2 border rounded mb-2 text-sm"
+      />
 
       <select
         name="existingDealer"
@@ -74,7 +157,8 @@ export default function FeedBackForm() {
         <option value="No">No</option>
       </select>
       {errors.existingDealer && <p className="text-red-500 text-sm">{errors.existingDealer}</p>}
-
+      
+      
       <select
         name="orderSize"
         value={formData.orderSize}

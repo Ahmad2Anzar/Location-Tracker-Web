@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function MainLayout() {  
   const [searchParams] = useSearchParams();
   const menu = searchParams.get("menu");
-
+  const shift = localStorage.getItem("shift")
   const navigate = useNavigate();
  
   return (
@@ -26,7 +26,7 @@ export default function MainLayout() {
           }}
           className="bg-blue-500 hover:bg-blue-800 text-white font-semibold px-2 py-1 rounded-lg shadow-lg transition-all duration-300"
         >
-          Start
+         {shift === "start" ? 'End' : 'Start'}
         </button>
 
           <button 

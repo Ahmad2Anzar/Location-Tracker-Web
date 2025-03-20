@@ -1,26 +1,107 @@
 import React, { useState } from "react";
-import { CameraCapture } from "../../imports/componentsImports";
-import { FaUser, FaBuilding, FaMotorcycle, FaCar, FaTrain, FaBus, FaBicycle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { CameraCapture, getBattery, getLocation } from "../../imports/import";
+import { FaUser, FaBuilding, FaMotorcycle, FaCar, FaTrain, FaBus, FaBicycle, FaMapMarkerAlt } from "react-icons/fa";
+import { useNavigate, useLocation} from "react-router-dom";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const token = localStorage.getItem("authToken")
 
-export default function ReachedMilestone({ address }) {
+export default function ReachedMilestone() {
+
   const [userPhoto, setUserPhoto] = useState(null);
   const [entityPhoto, setEntityPhoto] = useState(null);
   const [transportMode, setTransportMode] = useState(null);
   const [transportPhoto, setTransportPhoto] = useState(null);
   const navigate = useNavigate()
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
   // Check if submit should be enabled
   const canSubmit = userPhoto && entityPhoto && transportMode 
+  const address = queryParams.get("address");
+  const routeId = queryParams.get("id");
+  const locationId = queryParams.get("locationId");
+  console.log(routeId,"iddddd")
+   const fetchBattery = async () =>{ 
+      const batteryLevel = await getBattery()
+      if(batteryLevel){
+        return batteryLevel.level*100
+      }
+    }
+  
+    const fetchLocation = async () => {
+      try {
+        const location = await getLocation();
+        if(location){
+          return location
+        };
+      } catch (error) {
+        console.error("Could not get location:", error);
+      }
+    };
 
+  const handleSubmit = async () => {
+    if (!userPhoto) {
+      alert("Please capture your photo before submitting.");
+      return;
+    }
+    if (!entityPhoto) {
+      alert("Please capture the entity photo.");
+      return;
+    }
+    if (!transportMode) {
+      alert("Please select a transport mode.");
+      return;
+    }
+    if ((transportMode === "bike" || transportMode === "car") && !transportPhoto) {
+      alert(`Please capture a photo of your ${transportMode}.`);
+      return;
+    }
+  
+    // ✅ Prepare API payload
+    const payload = {
+      id:locationId,
+      timestamp: Date.now(),
+      route_id: routeId,
+      yourImage: userPhoto,
+      entityImage: entityPhoto,
+      transportMode,
+      transportPhoto: (transportMode === "bike" || transportMode === "car") ? transportPhoto : null,
+      currentGeoPoint: fetchLocation(),
+      batteryLevel: fetchBattery(),
+    };
+  
+    try {
+      const response = await fetch(`${BASE_URL}/reached_milestone`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        alert("Milestone submitted successfully!");
+        navigate("/Location-Tracker-Web/planned_routes");
+      } else {
+        alert(`Failed to submit milestone: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      alert("Something went wrong! Please try again.");
+    }
+  };
+  
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 p-6 min-h-screen">
       {/* Heading */}
       <h1 className="text-2xl font-bold mb-4">Reached Milestone</h1>
 
       {/* Address Section */}
-      <div className="bg-gray-300 text-center p-2 rounded-lg w-full max-w-md">
-        <h4 className="text-lg font-semibold">Address</h4>
-        <p className="text-sm">{address}</p>
+      <div className="bg-gray-300 text-center p-2 rounded-lg w-full max-w-md flex items-center justify-center gap-2">
+        {/* <h4 className="text-lg font-semibold">Address</h4> */}
+        <FaMapMarkerAlt className="w-5 h-5 text-red-600 "  />
+        <h5 className="text-sm">{address}</h5>
       </div>
 
       {/* User Photo Capture */}
@@ -112,7 +193,7 @@ export default function ReachedMilestone({ address }) {
         {canSubmit && (
           <button
             className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all"
-            // onClick={() => onSubmit({ userPhoto, entityPhoto, transportMode, transportPhoto })}
+            onClick={()=>{handleSubmit}}
           >
             Submit
           </button>

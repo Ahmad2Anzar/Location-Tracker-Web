@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, } from "react-router-dom";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function AddRouteForm() {
   const [formData, setFormData] = useState({
@@ -7,9 +8,9 @@ export default function AddRouteForm() {
     dealerName: "",
     dealerPhone: "",
   });
-  
+  const token = localStorage.getItem("authToken")
   const navigate = useNavigate();
-
+  
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -28,13 +29,39 @@ export default function AddRouteForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (validateForm()) {
-      console.log("Form Data Submitted:", formData);
-      alert("Route added successfully! ✅");
+      const payload = {
+        dealerName: formData.dealerName,
+        routeAddress: formData.routeLocation,
+        dealerNumber: formData.dealerPhone,
+         
+      };
+  
+      try {
+        const response = await fetch(`${BASE_URL}/routes_plan_from_user`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+  
+        if (!response.ok) throw new Error("Failed to add route.");
+  
+        const result = await response.json();
+        alert("Route added successfully! ✅");
+        navigate("/Location-Tracker-Web/planned_routes");
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error adding route. Please try again.");
+      }
     }
   };
+  
 
   const handleCancel = () => {
     setFormData({ routeLocation: "", dealerName: "", dealerPhone: "" });

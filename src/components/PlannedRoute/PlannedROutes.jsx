@@ -1,30 +1,46 @@
-import React, { useState } from "react";
-import { BiBorderRadius } from "react-icons/bi";
+import React, { useState, useEffect } from "react";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 import { FaArrowLeft, FaSync, FaMapMarkerAlt, FaFlag, FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-const plannedRoutesData = [
-  { id: 1, dealerName: "ABC Traders", status: "Pending", address: "123, Main Street, City" },
-  { id: 2, dealerName: "XYZ Supplies", status: "Reached", address: "45, Market Road, Town" },
-  { id: 3, dealerName: "MegaMart Dealer", status: "Pending", address: "78, Industrial Area, Metro" },
-  { id: 4, dealerName: "Mega Dealer", status: "Completed", address: "78, Industrial Area, Metro, Delhi" }
-];
+
  
 export default function PlannedRoutes() {
 
-  const [activeTab,setActiveTab] = useState('milestone')
-  
+  const [activeTab,setActiveTab] = useState('milestone');
+  const [plannedRoutesData, setPlannedRoutesData] = useState([]);
+  const [refresh,setRefresh] = useState(false) ;
   const navigate = useNavigate();
+  const token = localStorage.getItem("authToken")
   
-  const handleReach = (status) => {
-   console.log(status)
-   if(status==="Pending"){
-     navigate('reached-milestone')
-   }
-   else{
-    navigate('complete-milestone')
-   }
-  }
+  const handleReach = (status, address, routeId,id ) => {
+    console.log(status)
+    const route = status === "pending" ? "reached-milestone" : "complete-milestone";
+    navigate(`${route}?address=${address}&id=${routeId}&locationId=${id}`);
+  };
+  
+  useEffect(() => {
+    const fetchPlannedRoutes = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/routes`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` 
+          }
+        });
+        if (!response.ok) throw new Error("Failed to fetch routes");
+  
+        const data = await response.json();
+        setPlannedRoutesData(data);
+      } catch (error) {
+        console.error("Error fetching planned routes:", error);
+      }
+    };
+  
+    fetchPlannedRoutes();
+  }, [refresh]);
+
 
   return (
 
@@ -38,7 +54,9 @@ export default function PlannedRoutes() {
           <FaArrowLeft className="text-xl text-gray-700" />
         </button>
         <h2 className="text-2xl font-bold flex-1 text-center text-gray-800">Planned Routes</h2>
-        <button className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-all">
+        <button
+          onClick={()=>{setRefresh(!refresh)}}
+          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-all">
           <FaSync className="text-xl text-gray-700" />
         </button>
       </div>
@@ -72,7 +90,7 @@ export default function PlannedRoutes() {
 
       {/* Cards List */}
       {plannedRoutesData.map((route, index) => (
-          <div key={route.id} className = {`relative flex  rounded-xl shadow-md w-full p-4 border-l-8 mb-3 ${route.status === "Pending" ? "bg-red-100" : "bg-green-100"} `} >
+          <div key={route.id} className = {`relative flex  rounded-xl shadow-md w-full p-4 border-l-8 mb-3 ${route.status === "pending" ? "bg-red-100" : "bg-green-100"} `} >
             {/* Left Side Index */}
             {/* <div className={`flex flex-col items-center justify-center text-white text-lg font-bold px-4 py-2 rounded-l-xl 
               ${route.status === "Reached" ? "bg-green-400" : "bg-red-400"}`}>
@@ -81,7 +99,7 @@ export default function PlannedRoutes() {
 
             {/* Main Content */}
             <div className="flex-1 px-4">
-              <h6 className="text-lg font-bold">{route.dealerName}</h6>
+              <h6 className="text-lg font-bold">{route.dealer}</h6>
               {activeTab === 'milestone' ? 
                 <p className={`flex items-center text-sm font-medium ${route.status === "Reached" ? "text-green-500" : "text-yellow-500"}`}>
                   <FaCheck className="mr-1" /> {route.status}
@@ -100,14 +118,16 @@ export default function PlannedRoutes() {
               activeTab === 'milestone' ? 
               <div className="absolute top-2 right-2 flex gap-2">
                 {/* Fixed Map Button */}
-                <button className="w-10 h-10 flex items-center justify-center bg-purple-100 text-purple-600 rounded-full shadow-md hover:bg-purple-200">
+                <button
+                style={{borderRadius  :"50px"}}
+                className="w-10 h-10 flex items-center justify-center bg-purple-100 text-purple-600 rounded-full shadow-md hover:bg-purple-200">
                   <FaMapMarkerAlt size={16} />
                 </button>
 
                 {/* Dynamic Status Button */}
                 <button
                   className={`p-2 rounded-full shadow-md ${route.status === "Reached" ? "bg-green-100 text-green-600 hover:bg-green-200" : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"}`}
-                  onClick={()=>handleReach(route.status)}
+                  onClick={()=>handleReach(route.status,route.address,route.route_id,route.id)}
                 >
                   {route.status === "Reached" ? <FaCheck size={16} /> : <FaFlag size={16} />}
                 </button>

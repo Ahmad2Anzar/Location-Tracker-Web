@@ -1,13 +1,34 @@
 import React, { useState } from "react";
-import { CameraCapture } from "../../imports/componentsImports";
+import { CameraCapture, getBattery, getLocation } from "../../imports/import";
 import { FaUser, FaMotorcycle, FaCar, FaTrain, FaBus, FaBicycle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const token =localStorage.getItem("authToken");
+const shift = localStorage.getItem("shift")
 
 export default function StartShiftComponent() {
   const [photo, setPhoto] = useState(null);
   const [transportMode, setTransportMode] = useState(null);
   const [transportPhoto, setTransportPhoto] = useState(null);
   const navigate = useNavigate()
+
+  const fetchBattery = async () =>{ 
+    const batteryLevel = await getBattery()
+    if(batteryLevel){
+      return batteryLevel.level*100
+    }
+  }
+
+  const fetchLocation = async () => {
+    try {
+      const location = await getLocation();
+      if(location){
+        return location
+      };
+    } catch (error) {
+      console.error("Could not get location:", error);
+    }
+  };
 
   const handleStartTracking = async () => {
     if (!photo) {
@@ -22,23 +43,30 @@ export default function StartShiftComponent() {
       alert(`Please capture a photo of your ${transportMode}.`);
       return;
     }
-
+    const newEvent = shift === "start" ? "end" : "start";
     // ✅ Prepare API payload
     const payload = {
-      userPhoto: photo,
-      transportMode,
-      transportPhoto: (transportMode === "bike" || transportMode === "car") ? transportPhoto : null
+      timestamp: Date.now(),
+      event: shift === "start" ? "end" : "start",
+      currentGeoPoint : fetchLocation(),
+      batteryLevel : fetchBattery(),
+      imageBase64: photo,
+      mode:transportMode,
+      modeimageBase64: (transportMode === "bike" || transportMode === "car") ? transportPhoto : null
     };
-
+        
     try {
-      const response = await fetch("", {
+      const response = await fetch(`${BASE_URL}/tracking/update`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+         },
         body: JSON.stringify(payload),
       });
-
+     
       const data = await response.json();
       if (response.ok) {
+        localStorage.setItem("shift", newEvent);
         alert("Tracking started successfully!");
       } else {
         alert(`Failed to start tracking: ${data.message}`);
@@ -51,9 +79,12 @@ export default function StartShiftComponent() {
 
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="bg-green-400 text-white p-6 rounded-2xl shadow-lg w-full max-w-md text-center mb-2">
-      <h1 className="text-2xl font-bold">Start Your Shift</h1>
-    </div>
+      <div className={`p-6 rounded-2xl shadow-lg w-full max-w-md text-center mb-2 ${shift === 'start' ? 'bg-red-300' : 'bg-green-400'} text-white`}>
+        <h1 className="text-2xl font-bold">
+          {shift === 'start' ? 'End Your Shift' : 'Start Your Shift'}
+        </h1>
+      </div>
+
       {/* Shift Start Section */}
       <div className="bg-white text-green p-6 rounded-3xl shadow-lg w-full max-w-md text-center">
         <div className="mt-4">
@@ -124,11 +155,13 @@ export default function StartShiftComponent() {
       null
       }
       <button 
-        onClick={()=>{handleStartTracking}}
-        style={{ borderRadius: "25px" }}
-        className="bg-green-500 text-white px-6 py-2 rounded-full  mt-6 mb-4 shadow-md hover:bg-green-600 transition-all">
-        Start Tracking
+        onClick={handleStartTracking} 
+        style={{ borderRadius: "25px" }} 
+        className={`px-6 py-2 rounded-full mt-6 mb-4 shadow-md transition-all text-white 
+          ${shift === 'start' ? 'bg-red-400 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}>
+        {shift === 'start' ? 'End Tracking' : 'Start Tracking'}
       </button>
+
       <button 
         onClick={()=>{navigate('/Location-Tracker-Web')}}
         style={{ borderRadius: "25px" }}
