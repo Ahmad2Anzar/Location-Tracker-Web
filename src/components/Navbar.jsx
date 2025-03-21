@@ -26,7 +26,7 @@ export default function Navbar() {
 
       {/* Logout Confirmation Popup */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-9999">
           <div className="bg-white rounded-lg p-6 shadow-lg text-center w-80">
             <h2 className="text-xl font-semibold mb-4">Confirm Logout</h2>
             <p className="text-gray-600 mb-4">Are you sure you want to logout?</p>

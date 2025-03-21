@@ -10,8 +10,8 @@ export default function Planned() {
       <Routes>
         <Route path="/" element={<PlannedRoutes />}/>
         <Route path="/add-routes" element={<AddRoute />} />
-        <Route path="/reached-milestone" element={<ReachedMilestoneComponent />} />
-        <Route path="/complete-milestone" element={<FeedbackForm />} />
+        <Route path="/reached-milestone/" element={<ReachedMilestoneComponent />} />
+        <Route path="/complete-milestone/" element={<FeedbackForm />} />
         <Route path="*" element={<UnhandledRoutes />} />
       </Routes>
     </Suspense>

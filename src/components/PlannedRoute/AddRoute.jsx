@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, } from "react-router-dom";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function AddRouteForm() {
   const [formData, setFormData] = useState({
@@ -10,13 +11,61 @@ export default function AddRouteForm() {
   });
   const token = localStorage.getItem("authToken")
   const navigate = useNavigate();
-  
+  const suggestionBoxRef = useRef(null);
   const [errors, setErrors] = useState({});
+  const [suggestions, setSuggestions] = useState([]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (suggestionBoxRef.current && !suggestionBoxRef.current.contains(event.target)) {
+        setSuggestions([]); 
+      }
+    };
+  
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
+  const suggestion = async (input) => {
+    if (input.length > 2) {
+      try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${input}&format=json&limit=5&countrycodes=in`);
+        const data = await response.json();
+        setSuggestions(data.map(item => item.display_name));
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
+  
+  
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+          const data = await response.json();
+          setFormData({ ...formData, routeLocation: data.display_name });
+        } catch (error) {
+          console.error("Error fetching location:", error);
+        }
+      }, (error) => {
+        console.error("Geolocation error:", error);
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+  
   const validateForm = () => {
     let newErrors = {};
 
@@ -70,24 +119,26 @@ export default function AddRouteForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl border">
+    <div className="relative max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl border">
       {/* Heading */}
       <h2 className="text-xl font-bold mb-4">Add Route</h2>
 
       <form onSubmit={handleSubmit}>
 
         {/* Route Location */}
-        <div className="relative mb-4">
+        <div className="relative mb-4 flex items-center">
           <input
             type="text"
             id="routeLocation"
             name="routeLocation"
             value={formData.routeLocation}
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              suggestion(e.target.value || formData.routeLocation); 
+            }}
             className={`peer w-full p-2 border rounded text-sm focus:outline-none focus:border-blue-500 ${
               errors.routeLocation ? "border-red-500" : "border-gray-300"
             }`}
-            
           />
           <label
             htmlFor="routeLocation"
@@ -98,8 +149,35 @@ export default function AddRouteForm() {
           >
             Route Location
           </label>
+          <button
+            type="button"
+            onClick={getCurrentLocation} 
+            className="ml-2 px-3 py-2 h-10 bg-blue-500 text-white rounded"
+          >
+             <FaMapMarkerAlt className="text-white" />
+          </button>
           {errors.routeLocation && <p className="text-red-500 text-xs mt-1">{errors.routeLocation}</p>}
         </div>
+        <div ref={suggestionBoxRef} className="relative">
+          {suggestions.length > 0 && (
+            <ul className="absolute top-[-25px] bg-white border border-gray-300 rounded w-100  z-10 max-h-40 overflow-y-auto">
+              {suggestions.map((suggestion, index) => (
+                <li 
+                  key={index} 
+                  onClick={() => {
+                    setFormData({ ...formData, routeLocation: suggestion });
+                    setSuggestions([]);
+                  }} 
+                  className="p-2 cursor-pointer hover:bg-gray-100"
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+
 
         {/* Dealer Name */}
         <div className="relative mb-4">

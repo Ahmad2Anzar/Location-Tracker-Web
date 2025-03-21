@@ -2,6 +2,8 @@ import GuardedRoute from "../hooks/GuardedRoute";
 import Loading from "../miscellaneous/Loading";
 import  { Menu } from "../miscellaneous/GeneralsArrays";
 import PermissionRoute from "../hooks/PermissionRoute";
+import getBattery from "../hooks/getBattery";
+import getLocation from "../hooks/getGeoLocations";
 
 export {
   MainLayoutRoutes, LandingRoutes, UnhandledRoutes, AuthenticationRoutes, DashboardRoutes, Planned
@@ -21,4 +23,4 @@ export {
 
 
 
-export { GuardedRoute, Loading, Menu, PermissionRoute };
+export { GuardedRoute, Loading, Menu, PermissionRoute, getBattery, getLocation };

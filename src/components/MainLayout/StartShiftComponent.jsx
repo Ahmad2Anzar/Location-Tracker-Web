@@ -78,7 +78,7 @@ export default function StartShiftComponent() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-100 p-4">
+    <div className="flex flex-col items-center justify-center bg-gray-200 p-4 mt-15">
       <div className={`p-6 rounded-2xl shadow-lg w-full max-w-md text-center mb-2 ${shift === 'start' ? 'bg-red-300' : 'bg-green-400'} text-white`}>
         <h1 className="text-2xl font-bold">
           {shift === 'start' ? 'End Your Shift' : 'Start Your Shift'}
