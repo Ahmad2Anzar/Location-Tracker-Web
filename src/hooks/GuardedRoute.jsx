@@ -15,7 +15,7 @@ const GuardedRoute = ({ element, ...rest }) => {
     // redirect them to the landing ("/landing") and pass the current location state.
     // The state allows redirecting back to this page after authentication.
     if (!auth) {
-        return <Navigate to="/auth/login" replace state={{ from: location }} />;
+        return <Navigate to="auth/login" replace state={{ from: location }} />;
     }
 
     // If the user is authenticated, render the protected route's element
