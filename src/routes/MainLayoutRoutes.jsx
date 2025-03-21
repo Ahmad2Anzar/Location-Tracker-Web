@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { MainLayoutScreen, DashboardRoutes, UnhandledRoutes, Loading, Planned, StartShiftComponent, PermissionRoute, LeaveRequest, ClaimBills,  } from '../imports/import';
+import { MainLayoutScreen, DashboardRoutes, UnhandledRoutes, Loading, Planned, StartShiftComponent, PermissionRoute, LeaveRequest, ClaimBills, LogHistory,  } from '../imports/import';
 import { useRecoilState } from 'recoil';
 import locationStates from '../recoil/atom/location_atom';
 
@@ -45,6 +45,7 @@ function MainLayoutRoutes() {
           <Route path="shift" element={<StartShiftComponent/>} />
           <Route path="leave-request" element={<LeaveRequest/>} />
           <Route path="claim-bill" element={<ClaimBills/>} />
+          <Route path="log-history" element={<LogHistory/>} />
           <Route path="*" element={<UnhandledRoutes />} />
         </Routes>     
     </Suspense>

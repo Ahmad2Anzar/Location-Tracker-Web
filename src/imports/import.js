@@ -14,7 +14,7 @@ export {
 
 export {
   SignUpHeader, SignUpBody, SignUpFooter, MainLayout, Navbar, OSMMap, StartShiftComponent, FeedbackForm, PlannedRoutes,
-  AddRoute, CameraCapture, ReachedMilestoneComponent, MenuOption, LeaveRequest, ClaimBills
+  AddRoute, CameraCapture, ReachedMilestoneComponent, MenuOption, LeaveRequest, ClaimBills, LogHistory
 } from "./componentsImports";
 
 export {

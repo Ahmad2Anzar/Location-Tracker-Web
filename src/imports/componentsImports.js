@@ -14,4 +14,5 @@ export const CameraCapture= lazy(()=>import('../components/camera'))
 export const ReachedMilestoneComponent = lazy(()=>import('../components/PlannedRoute/ReachedMilestone'))
 export const MenuOption = lazy(()=> import ('../components/MainLayout/MenuOption'))
 export const LeaveRequest = lazy(() => import('../components/LeaveRequest'));
-export const ClaimBills = lazy(()=> import('../components/ClaimBills'))
+export const ClaimBills = lazy(()=> import('../components/ClaimBills'));
+export const LogHistory = lazy(() => import('../components/LogHistory'))
